@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PJSK Event Tool</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="bg.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Candal&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Carme&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/x-icon" href="assets/icon.png" />
+</head>
+<body>
+    <!---- Bg ----->
+    <div class="bg">
+        <div class="bg__container" id="bg__pink-1-container">
+            <img src="assets/triangle_pink_1.png" alt="triangle" class="bg__triangle" id="bg__pink-1">
+        </div>
+        <div class="bg__container" id="bg__pink-2-container">
+            <img src="assets/triangle_pink_1.png" alt="triangle" class="bg__triangle" id="bg__pink-2">
+        </div>
+        <div class="bg__container" id="bg__pink-3">
+            <img src="assets/triangle_pink_1.png" alt="triangle" class="bg__triangle" id="bg__pink-3">
+        </div>
+        <div class="bg__container" id="bg__pink-4-container">
+            <img src="assets/triangle_pink_2.png" alt="triangle" class="bg__triangle" id="bg__pink-4">
+        </div>
+        <div class="bg__container" id="bg__yellow-1-container">
+            <img src="assets/triangle_yellow_2.png" alt="triangle" class="bg__triangle" id="bg__yellow-1">
+        </div>
+        <div class="bg__container" id="bg__yellow-2-container">
+            <img src="assets/triangle_yellow_1.png" alt="triangle" class="bg__triangle" id="bg__yellow-2">
+        </div>
+        <div class="bg__container" id="bg__yellow-3-container">
+            <img src="assets/triangle_yellow_2.png" alt="triangle" class="bg__triangle" id="bg__yellow-3">
+        </div>
+        <div class="bg__container" id="bg__blue-1-container">
+            <img src="assets/triangle_blue_2.png" alt="triangle" class="bg__triangle" id="bg__blue-1">
+        </div>
+        <div class="bg__container" id="bg__blue-2-container">
+            <img src="assets/triangle_blue_1.png" alt="triangle" class="bg__triangle" id="bg__blue-2">
+        </div>
+        <div class="bg__container" id="bg__blue-3-container">
+            <img src="assets/triangle_blue_1.png" alt="triangle" class="bg__triangle" id="bg__blue-3">
+        </div>    
+    </div>
+
+    <!---- Nav ----->
+    <nav>
+        <div class="nav__container">
+            <div class="nav__title">
+                <img src="/assets/icon.svg" alt="icon">
+                <p>PJSK Event Tool</p>
+            </div>
+            <ul class="nav__content">
+                <li>
+                    <a href="index.html" class="nav__link" id="nav__current">Point Predictor</a>
+                </li>
+                <li>
+                    <a href="/" class="nav__link">Past Events</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!---- Main ----->
+    <div class="main">
+        <div class="main__container">
+            <div class="main__content">
+                <h1>Event Rank Point Predictor</h1>
+                <p>Enter rank to predict:</p>
+                <div class="main__input">
+                    <input type="number" class="main__txtbox" id="txtbox">
+                    <button class="main__btn" id="predict">Predict</button>
+                </div>
+                <p id="main__error">Supported ranks:<br>100, 200, 300, 400, 500, 1000, 2000, 3000, 4000, 5000, 10000</p>
+            </div>
+            <div class="main__canvas-container">
+                <canvas id="main__canvas"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!---- Footer ----->
+    <div class="footer">
+        <div class="footer__container">
+            <p class="footer__txt footer__non-mobile">Discord: sk0416</p>
+            <p class="footer__txt footer__non-mobile">Data from Sekai Viewer</p>
+            <div class="footer__mobile">
+                <pre class="footer__txt">Discord: sk0416   |   Data from Sekai Viewer</pre>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
