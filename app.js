@@ -1,6 +1,16 @@
 var x = window.matchMedia("(max-width: 620px)");
 
-document.getElementById("predict").onclick = predict;
+var selectedRank = null; 
+function selectRank(selectedButton, rank) {
+    // Remove 'selected' class from all buttons
+    const buttons = document.querySelectorAll('.main__rank-button');
+    buttons.forEach(button => {
+        button.classList.remove('selected');
+    });
+    
+    selectedButton.classList.add('selected');
+    selectedRank = rank;
+}
 
 var xhr = null;
 getXmlHttpRequestObject = function () {
@@ -19,29 +29,76 @@ function sendDataCallback() {
     }
 }
 
-function predict() {
-    const ranks = [100, 200, 300, 400, 500, 1000, 2000, 3000, 4000, 5000, 10000];
-    var rank;
-    rank = parseInt(document.getElementById("txtbox").value);
-    if (!ranks.includes(rank)) {
-        document.getElementById("main__error").style.display = "block"; 
-        if (x.matches) {
-            document.getElementsByClassName("main__input")[0].style.marginBottom = "1rem";
+document.getElementById("draw").onclick = draw;
+
+async function fetchEventRankings(eventNumbers, rank) {
+    const responses = []; 
+
+    for (const eventNumber of eventNumbers) {
+        const url = `https://api.sekai.best/event/${eventNumber}/rankings/graph?region=tw&rank=${rank}`;
+        console.log(url)
+        const response = await fetch(url);
+        console.log(response.status);
+        
+        if (!response.ok) {
+            console.error(`HTTP error! Status: ${response.status}`);
         }
+        try {
+            const json = await response.json(); 
+            console.log(json)
+            responses.push(json); 
+        } catch (error) {
+            console.error(`Failed to fetch data for event ${eventNumber}:`, error);
+        }
+    }
+    return responses; 
+}
+
+async function draw() {
+    console.log(selectedRank)
+    const errorMsg = document.getElementById("main__error");
+    if (selectedRank === null) {
+        errorMsg.innerText = "Rank not selected";
+        return
+    }
+
+    var input = document.getElementById('txtbox').value;
+    const txtbox = document.getElementById('txtbox');
+    input = input.replace(/\s+/g, '');
+
+    const regex = /^(\d+(-\d+)?)(,\d+(-\d+)?)*$/;
+    if (!regex.test(input)) {
+        txtbox.classList.add('error');
+        errorMsg.innerText = "Must be comma-separated numbers or ranges of numbers\neg. 36\neg. 45, 46, 48\neg. 41, 60, 117-119"
+        // if (x.matches) {
+        //     document.getElementsByClassName("main__error")[0].style.marginBottom = "3rem";
+        // }
         return
     }
     else {
-        if (document.getElementById("main__error").style.display == "block") {
-            document.getElementById("main__error").style.display = "none"; 
-            if (x.matches) {
-                document.getElementsByClassName("main__input")[0].style.marginBottom = "3rem";
-            }
-        }
+        txtbox.classList.remove('error');
+        errorMsg.innerText = "";
 
-        xhr = getXmlHttpRequestObject();
-        xhr.onreadystatechange = sendDataCallback;
-        xhr.open("POST", "http://localhost:8000/predict", true);
-        xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-        xhr.send(JSON.stringify({"rank": rank}));
+        var events = input.split(',')
+        const eventNos = [];
+        events.forEach(part => {
+            if (part.includes('-')) {
+                const rangeParts = part.split('-');
+                const start = parseInt(rangeParts[0]); 
+                const end = parseInt(rangeParts[1]); 
+
+                for (let i = start; i <= end; i++) {
+                    eventNos.push(i);
+                }
+    
+            } else {
+                const number = parseInt(part);
+                eventNos.push(number);
+            }
+        });
+        console.log(eventNos);
+
+        const responses = await fetchEventRankings(eventNos, selectedRank);
+        console.log("Fetched Responses:", responses);
     }
 }

@@ -14,6 +14,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Carme&display=swap" rel="stylesheet">
     <link rel="icon" type="image/x-icon" href="assets/icon.ico" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 </head>
 <body>
     <!---- Bg ----->
@@ -59,10 +60,10 @@
             </div>
             <ul class="nav__content">
                 <li>
-                    <a href="index.html" class="nav__link" id="nav__current">Point Predictor</a>
+                    <a href="index.html" class="nav__link" id="nav__current">Compare Events</a>
                 </li>
                 <li>
-                    <a href="/" class="nav__link">Past Events</a>
+                    <a href="/" class="nav__link disabled">Other Tools (coming soon)</a>
                 </li>
             </ul>
         </div>
@@ -72,13 +73,19 @@
     <div class="main">
         <div class="main__container">
             <div class="main__content">
-                <h1>Event Rank Point Predictor</h1>
-                <p>Enter rank to predict:</p>
-                <div class="main__input">
-                    <input type="number" class="main__txtbox" id="txtbox">
-                    <button class="main__btn" id="predict">Predict</button>
+                <h1>Compare Events</h1>
+                <div class="main__rank">
+                    <p>Select rank: </p>
+                    <button class="main__rank-button" onclick="selectRank(this, 500)">T500</button>
+                    <button class="main__rank-button" onclick="selectRank(this, 1000)">T1000</button>
                 </div>
-                <p id="main__error">Supported ranks:<br>100, 200, 300, 400, 500, 1000, 2000, 3000, 4000, 5000, 10000</p>
+                <p>Enter past events to plot</p>
+                <p class="subtxt"> (No data for events 40, 42, 54-56, 58, 67-116)</p>
+                <div class="main__input">
+                    <input type="text" class="main__txtbox" id="txtbox" placeholder="eg. 36, 38, 60-62">
+                    <button class="main__btn" id="draw">Draw</button>
+                </div>
+                <p id="main__error"></p>
             </div>
             <div class="main__canvas-container">
                 <canvas id="main__canvas"></canvas>
