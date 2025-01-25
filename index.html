@@ -15,6 +15,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Carme&display=swap" rel="stylesheet">
     <link rel="icon" type="image/x-icon" href="assets/icon.ico" />
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://cdn.canvasjs.com/canvasjs.min.js"></script>
 </head>
 <body>
     <!---- Bg ----->
@@ -79,7 +80,7 @@
                     <button class="main__rank-button" onclick="selectRank(this, 500)">T500</button>
                     <button class="main__rank-button" onclick="selectRank(this, 1000)">T1000</button>
                 </div>
-                <p>Enter past events to plot</p>
+                <p>Enter events to plot</p>
                 <p class="subtxt"> (No data for events 40, 42, 54-56, 58, 67-116)</p>
                 <div class="main__input">
                     <input type="text" class="main__txtbox" id="txtbox" placeholder="eg. 36, 38, 60-62">
@@ -88,7 +89,7 @@
                 <p id="main__error"></p>
             </div>
             <div class="main__canvas-container">
-                <canvas id="main__canvas"></canvas>
+                <div id="main__canvas"></div>
             </div>
         </div>
     </div>
