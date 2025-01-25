@@ -2,51 +2,50 @@ var x = window.matchMedia("(max-width: 620px)");
 
 var selectedRank = null; 
 function selectRank(selectedButton, rank) {
-    // Remove 'selected' class from all buttons
     const buttons = document.querySelectorAll('.main__rank-button');
     buttons.forEach(button => {
-        button.classList.remove('selected');
+        button.classList.remove('selected');  // Remove 'selected' class from all buttons
     });
-    
     selectedButton.classList.add('selected');
     selectedRank = rank;
-}
-
-var xhr = null;
-getXmlHttpRequestObject = function () {
-    if (!xhr) {
-        // Create a new XMLHttpRequest object 
-        xhr = new XMLHttpRequest();
-    }
-    return xhr;
-};
-
-function sendDataCallback() {
-    // Check response is ready or not
-    if (xhr.readyState == 4 && xhr.status == 201) {
-        console.log("Data creation response received!");
-        alert(xhr.responseText);
-    }
 }
 
 document.getElementById("draw").onclick = draw;
 
 async function fetchEventRankings(eventNumbers, rank) {
-    const responses = []; 
-
+    const responses = {}; 
+    let eventsJson = await $.getJSON("https://sekai-world.github.io/sekai-master-db-tc-diff/events.json");
+    console.log("Events db loaded successfully");
+        
     for (const eventNumber of eventNumbers) {
-        const url = `https://api.sekai.best/event/${eventNumber}/rankings/graph?region=tw&rank=${rank}`;
+        let eventStart = eventsJson.find(item => item.id === eventNumber).startAt;
+        console.log(eventStart);
+
+        // const url = `https://proxy.cors.sh/https://api.sekai.best/event/${eventNumber}/rankings/graph?region=tw&rank=${rank}`;
+        // console.log(url)
+        // const response = await fetch(url, {
+        //     headers: {
+        //     'x-cors-api-key': 'temp_15167b58c2ad394989c4398605ad4385'
+        //     }
+        // });
+        const url = `https://cors.selinakwokhiulam.workers.dev/?https://api.sekai.best/event/${eventNumber}/rankings/graph?region=tw&rank=${rank}`;
         console.log(url)
         const response = await fetch(url);
         console.log(response.status);
-        
         if (!response.ok) {
             console.error(`HTTP error! Status: ${response.status}`);
         }
         try {
-            const json = await response.json(); 
-            console.log(json)
-            responses.push(json); 
+            var json = await response.json(); 
+            json = json["data"]["eventRankings"];
+            var timeScore = json.map(item => ({
+                x: parseFloat(((Date.parse(item.timestamp) - eventStart)/1000/60/60).toFixed(1)),
+                y: item.score
+            })
+            )
+            //console.log(timeScore)
+            responses[eventNumber] = timeScore
+            console.log(`Event ${eventNumber} timeScore added to responses`)
         } catch (error) {
             console.error(`Failed to fetch data for event ${eventNumber}:`, error);
         }
@@ -57,6 +56,7 @@ async function fetchEventRankings(eventNumbers, rank) {
 async function draw() {
     console.log(selectedRank)
     const errorMsg = document.getElementById("main__error");
+    const drawBtn = document.getElementById("draw");
     if (selectedRank === null) {
         errorMsg.innerText = "Rank not selected";
         return
@@ -78,6 +78,8 @@ async function draw() {
     else {
         txtbox.classList.remove('error');
         errorMsg.innerText = "";
+        drawBtn.classList.add('loading');
+        drawBtn.innerText = "Loading";
 
         var events = input.split(',')
         const eventNos = [];
@@ -98,7 +100,63 @@ async function draw() {
         });
         console.log(eventNos);
 
-        const responses = await fetchEventRankings(eventNos, selectedRank);
-        console.log("Fetched Responses:", responses);
+        try {
+            const responses = await fetchEventRankings(eventNos, selectedRank);
+            //console.log(responses);
+    
+            var graphData = [];
+            for (const key in responses) {
+                graphData.push({
+                    name: key,
+                    type: "line",
+                    markerType: "none",
+                    lineThickness: 1.2,
+                    showInLegend: true,
+                    dataPoints: responses[key]
+                })
+            }
+
+            // PLot line graph
+            var chart = new CanvasJS.Chart("main__canvas", {
+                animationEnabled: true,
+                axisX: {
+                    title: "Hours from start",
+                    titleFontSize: 11,
+                    labelFontSize: 10,
+                    includeZero: true,
+                },
+                axisY: {
+                    title: "Event points",
+                    includeZero: true,
+                    titleFontSize: 11,
+                    labelFontSize: 10,
+                    valueFormatString: "#M,,.",
+                },
+                legend:{
+                    fontSize: 11,
+                },
+                toolTip:{
+                    shared: true,
+                    contentFormatter: function(e){
+                        var content =  "<strong>Hour " + e.entries[0].dataPoint.x + "</strong>";
+                        for(var i = 0; i < e.entries.length; i++){
+                            var entry = e.entries[i];
+                            content += "</br>" + entry.dataSeries.name + ": " +  entry.dataPoint.y;
+                        }
+                        return content;
+                    },
+                },
+                data: graphData
+            });
+            drawBtn.classList.remove('loading');
+            drawBtn.innerText = "Draw";
+            chart.render();
+        }
+        catch(e) {
+            errorMsg.innerText = "Errored, please try again :("
+            drawBtn.classList.remove('loading');
+            drawBtn.innerText = "Draw";
+            return
+        }
     }
 }
