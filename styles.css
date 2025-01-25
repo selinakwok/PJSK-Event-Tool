@@ -65,6 +65,13 @@ nav {
     transition: all 0.2s ease;
 }
 
+.nav__content a {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
 .nav__link {
     text-decoration: none;
     font-family: Carme, sans-serif;
@@ -73,7 +80,6 @@ nav {
     font-size: 1.1rem;
     transition: all 0.2s ease;
     color: #444466;
-    text-align: center;
 }
 
 .nav__link:hover {
@@ -385,7 +391,7 @@ input::-webkit-inner-spin-button {
 
 @media screen and (max-width: 620px) {
     .main {
-        height: 75vh;
+        height: 70vh;
     }
     
     .main__container {
