@@ -391,7 +391,8 @@ input::-webkit-inner-spin-button {
 
 @media screen and (max-width: 620px) {
     .main {
-        height: 70vh;
+        top: 60px;
+        height: 75vh;
     }
     
     .main__container {
